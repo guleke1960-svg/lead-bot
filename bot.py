@@ -46,13 +46,21 @@ async def interest_handler(message: Message, state: FSMContext):
 
     if text == "✅ Иә, қызық":
         await state.set_state(LeadState.waiting_name)
-        await message.answer("Керемет 👍\n\nАлдымен танысып алайық 😊\nАтыңыз кім?")
+        await message.answer(
+            "Керемет 👍\n\n"
+            "Алдымен танысып алайық 😊\n"
+            "Атыңыз кім?"
+        )
 
     elif text == "❌ Жоқ":
+        await state.clear()
         await message.answer("Жақсы, шешіміңіз өзгерсе, қайта жазыңыз 🌷")
 
     else:
-        await message.answer("Төмендегі батырмалардың бірін таңдаңыз 👇")
+        await message.answer(
+            f"Сіз басқан мәтін: {text}\n\nТөмендегі батырмалардың бірін таңдаңыз 👇",
+            reply_markup=main_kb,
+        )
 
 
 async def name_handler(message: Message, state: FSMContext):
