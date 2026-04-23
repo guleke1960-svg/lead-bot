@@ -9,7 +9,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from dotenv import load_dotenv
 
 load_dotenv()
-TOKEN = "8215841376:AAHovmDZXecR8TEVL5Fawb6NWM80QqyAxlI"
+TOKEN = "8215841376:AAEfbIwggr1ozyw6uJ9FgaSOeTyUPjNQ22I"
 
 class LeadState(StatesGroup):
     waiting_interest = State()
