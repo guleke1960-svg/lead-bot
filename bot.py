@@ -96,25 +96,25 @@ async def interest_handler(message: Message, state: FSMContext):
     text = message.text.strip()
 
     if text == "✅ Иә, қызық":
-        await state.set_state(Form.name)
-        await message.answer(
-            "🔥 Керемет шешім!\n\n"
-            "Қазір дұрыс ақпарат алсаңыз, жақсы нәтиже аласыз.\n\n"
-            "Алдымен танысып алайық 👇"
-       )
+    await state.set_state(Form.name)
+    await message.answer(
+        "🔥 Керемет шешім!\n\n"
+        "Қазір дұрыс ақпарат алсаңыз, жақсы нәтиже аласыз.\n\n"
+        "Алдымен танысып алайық 👇"
+    )
 
     elif text == "❌ Жоқ":
-        await state.clear()
-        await message.answer(
-            "Жақсы, шешіміңіз өзгерсе, қайта келіңіз 🌷",
-            reply_markup=menu_kb,
-        )
+    await state.clear()
+    await message.answer(
+        "Жақсы, шешіміңіз өзгерсе, қайта келіңіз 🌷",
+         reply_markup=menu_kb,
+    )
 
     else:
-        await message.answer(
-            "Төмендегі батырмалардың бірін таңдаңыз 👇",
-            reply_markup=interest_kb,
-        )
+    await message.answer(
+        "Төмендегі батырмалардың бірін таңдаңыз 👇",
+        reply_markup=interest_kb,
+     )
 
 
 async def name_handler(message: Message, state: FSMContext):
@@ -134,7 +134,7 @@ async def age_handler(message: Message, state: FSMContext):
     allowed = ["18-25", "26-35", "36-45", "45+"]
 
     if age not in allowed:
-        await message.answer("Төмендегі батырмалардың бірін таңдаңыз 👇", reply_markup=age_kb)
+    await message.answer("Төмендегі батырмалардың бірін таңдаңыз 👇", reply_markup=age_kb)
         return
 
     await state.update_data(age=age)
@@ -157,7 +157,7 @@ async def goal_handler(message: Message, state: FSMContext):
     ]
 
     if goal not in allowed_goals:
-        await message.answer("Төмендегі дайын жауаптардың бірін таңдаңыз 👇", reply_markup=goal_kb)
+    await message.answer("Төмендегі дайын жауаптардың бірін таңдаңыз 👇", reply_markup=goal_kb)
         return
 
     data = await state.get_data()
@@ -166,14 +166,14 @@ async def goal_handler(message: Message, state: FSMContext):
     username = message.from_user.username if message.from_user.username else "username жоқ"
 
     if ADMIN_ID:
-        await message.bot.send_message(
-            ADMIN_ID,
-            "🔥 Жаңа лид!\n\n"
-            f"👤 Аты: {name}\n"
-            f"🎂 Жасы: {age}\n"
-            f"🎯 Мақсаты: {goal}\n"
-            f"📲 Telegram: @{username}",
-        )
+    await message.bot.send_message(
+         ADMIN_ID,
+         "🔥 Жаңа лид!\n\n"
+         f"👤 Аты: {name}\n"
+         f"🎂 Жасы: {age}\n"
+         f"🎯 Мақсаты: {goal}\n"
+         f"📲 Telegram: @{username}",
+     )
 
     await message.answer(
         "🔥 Сізге толық ақпарат дайын!\n\n"
@@ -182,10 +182,10 @@ async def goal_handler(message: Message, state: FSMContext):
         reply_markup=ReplyKeyboardRemove(),
     )
 
-await message.answer(
-    "📲 WhatsApp-қа өту үшін батырманы басыңыз:",
-    reply_markup=whatsapp_button,
-)
+    await message.answer(
+        "📲 WhatsApp-қа өту үшін батырманы басыңыз:",
+        reply_markup=whatsapp_button,
+    )
 
     await state.clear()
 
