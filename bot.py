@@ -136,7 +136,7 @@ async def age_handler(message: Message, state: FSMContext):
     allowed = ["18-25", "26-35", "36-45", "45+"]
 
     if age not in allowed:
-    await message.answer("Төмендегі батырмалардың бірін таңдаңыз 👇", reply_markup=age_kb)
+        await message.answer("Төмендегі батырмалардың бірін таңдаңыз 👇", reply_markup=age_kb)
         return
 
     await state.update_data(age=age)
