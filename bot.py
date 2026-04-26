@@ -77,8 +77,10 @@ async def start_handler(message: Message, state: FSMContext):
     await message.answer(
         "Сәлем! 👋\n\n"
         "Мен Гүлжанның жеке көмекші ботымын.\n\n"
-        "Бастау үшін төмендегі батырманы басыңыз 👇",
-        reply_markup=menu_kb,
+        "💰 Қазір көптеген адамдар онлайн табыс таба бастады.\n"
+        "Сіз де сондай мүмкіндік іздеп жүрсіз бе?\n\n"
+        "👇 Төмендегі батырманы басыңыз",
+        reply_markup=menu_kb
     )
 
 
@@ -96,11 +98,10 @@ async def interest_handler(message: Message, state: FSMContext):
     if text == "✅ Иә, қызық":
         await state.set_state(Form.name)
         await message.answer(
-            "Керемет 👍\n\n"
-            "Алдымен танысып алайық.\n"
-            "Атыңыз кім?",
-            reply_markup=ReplyKeyboardRemove(),
-        )
+            "🔥 Керемет шешім!\n\n"
+            "Қазір дұрыс ақпарат алсаңыз, жақсы нәтиже аласыз.\n\n"
+            "Алдымен танысып алайық 👇"
+       )
 
     elif text == "❌ Жоқ":
         await state.clear()
@@ -175,9 +176,11 @@ async def goal_handler(message: Message, state: FSMContext):
         )
 
     await message.answer(
-        "🔥 Рахмет! Жауаптарыңыз қабылданды.\n\n"
-        "Сізге толық ақпарат беру үшін WhatsApp арқылы байланысқан ыңғайлы 👇",
-        reply_markup=ReplyKeyboardRemove(),
+        "🔥 Сізге толық ақпарат дайын!\n\n"
+        "⚡ Бірақ оны тек WhatsApp-та жібереміз\n"
+        "Себебі ол жерде толық түсіндірме + мысалдар бар\n\n"
+        "👇 Қазір өтіңіз:",
+        reply_markup=whatsapp_button,
     )
 
     await message.answer(
@@ -190,6 +193,9 @@ async def goal_handler(message: Message, state: FSMContext):
 
 async def contact_handler(message: Message):
     await message.answer(
+        "⏳ Соңғы 24 сағатта бізге 17 адам жазды\n"
+        "Сондықтан кешіктірмеңіз 👇"
+    )
         "📲 WhatsApp арқылы жазыңыз 👇",
         reply_markup=whatsapp_button,
     )
