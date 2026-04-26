@@ -96,25 +96,27 @@ async def interest_handler(message: Message, state: FSMContext):
     text = message.text.strip()
 
     if text == "✅ Иә, қызық":
-    await state.set_state(Form.name)
-    await message.answer(
-        "🔥 Керемет шешім!\n\n"
-        "Қазір дұрыс ақпарат алсаңыз, жақсы нәтиже аласыз.\n\n"
-        "Алдымен танысып алайық 👇"
-    )
+        await state.set_state(Form.name)
+        await message.answer(
+            "🔥 Керемет шешім!\n\n"
+            "Қазір дұрыс ақпарат алсаңыз, жақсы нәтиже аласыз.\n\n"
+            "Алдымен танысып алайық 👇\n"
+            "Атыңыз кім?",
+            reply_markup=ReplyKeyboardRemove(),
+        )
 
     elif text == "❌ Жоқ":
-    await state.clear()
-    await message.answer(
-        "Жақсы, шешіміңіз өзгерсе, қайта келіңіз 🌷",
-         reply_markup=menu_kb,
-    )
+        await state.clear()
+        await message.answer(
+            "Жақсы, шешіміңіз өзгерсе, қайта келіңіз 🌷",
+            reply_markup=menu_kb,
+        )
 
     else:
-    await message.answer(
-        "Төмендегі батырмалардың бірін таңдаңыз 👇",
-        reply_markup=interest_kb,
-     )
+        await message.answer(
+            "Төмендегі батырмалардың бірін таңдаңыз 👇",
+            reply_markup=interest_kb,
+        )
 
 
 async def name_handler(message: Message, state: FSMContext):
