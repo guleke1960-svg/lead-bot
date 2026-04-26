@@ -184,8 +184,8 @@ async def goal_handler(message: Message, state: FSMContext):
     )
 
     await message.answer(
-        "📲 Каналға өту үшін батырманы басыңыз:",
-        reply_markup=whatsapp_button,
+        "📢 Компания туралы толық ақпаратты төмендегі каналдан көре аласыз 👇",
+        reply_markup=channel_button,
     )
 
     await state.clear()
