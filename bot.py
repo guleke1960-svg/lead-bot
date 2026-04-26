@@ -193,8 +193,7 @@ async def goal_handler(message: Message, state: FSMContext):
 async def contact_handler(message: Message):
     await message.answer(
         "⏳ Соңғы 24 сағатта бізге 17 адам жазды\n"
-        "Сондықтан кешіктірмеңіз 👇"
-    )
+        "Сондықтан кешіктірмеңіз 👇\n\n"
         "📲 WhatsApp арқылы жазыңыз 👇",
         reply_markup=whatsapp_button,
     )
