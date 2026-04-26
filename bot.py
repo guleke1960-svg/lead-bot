@@ -2,212 +2,106 @@ import asyncio
 import logging
 import os
 
-from aiogram import Bot, Dispatcher
-from aiogram.filters import CommandStart, StateFilter
+from aiogram import Bot, Dispatcher, F
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
-from dotenv import load_dotenv
 
-load_dotenv()
-
+# 🔑 ENV
 TOKEN = os.getenv("BOT_TOKEN")
-ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
+ADMIN_ID = int(os.getenv("ADMIN_ID"))
 
-
-class BotState(StatesGroup):
-    waiting_interest = State()
-    waiting_name = State()
-    q1 = State()
-    q2 = State()
-    q3 = State()
-
-
-interest_kb = ReplyKeyboardMarkup(
+# 🔘 МЕНЮ
+menu = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="✅ Иә, қызық")],
-        [KeyboardButton(text="❌ Жоқ")],
+        [KeyboardButton(text="🚀 Бастау")],
+        [KeyboardButton(text="📞 Байланыс")]
     ],
-    resize_keyboard=True,
+    resize_keyboard=True
 )
 
-q1_kb = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text="A) Иә")],
-        [KeyboardButton(text="B) Жоқ")],
-    ],
-    resize_keyboard=True,
+# 📲 WHATSAPP КНОПКА
+whatsapp_button = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(
+            text="📲 WhatsApp жазу",
+            url="https://wa.me/77052304629"  # ⚠️ ОСЫ ЖЕРГЕ ӨЗ НОМЕРІҢДІ ЖАЗ
+        )]
+    ]
 )
 
-q2_kb = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text="A) 1-2 сағат")],
-        [KeyboardButton(text="B) Уақытым аз")],
-    ],
-    resize_keyboard=True,
-)
-
-q3_kb = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text="A) Қызық")],
-        [KeyboardButton(text="B) Сенімсізбін")],
-    ],
-    resize_keyboard=True,
-)
+# 📊 СТЕЙТТЕР
+class Form(StatesGroup):
+    name = State()
+    age = State()
+    goal = State()
 
 
-async def start_handler(message: Message, state: FSMContext):
-    await state.clear()
-    await state.set_state(BotState.waiting_interest)
-
+# 🚀 /start
+async def start_handler(message: Message):
     await message.answer(
-        "Сәлем 👋\n\n"
-        "Мен Гүлжанның жеке көмекші ботымын.\n\n"
-        "Сіз қосымша табыс табу мүмкіндігін қарастырып жүрсіз бе? 💸\n\n"
-        "Қысқа тесттен өтіп, сізге ең тиімді бағытты анықтап берейін 👇",
-        reply_markup=interest_kb,
+        "Сәлем! 👋\n\nБіз сізге көмектесеміз.\n\nБастау үшін батырманы бас:",
+        reply_markup=menu
     )
 
 
-async def interest_handler(message: Message, state: FSMContext):
-    text = message.text.strip()
-
-    if text == "✅ Иә, қызық":
-        await state.set_state(BotState.waiting_name)
-        await message.answer(
-            "Керемет 👍\n\n"
-            "Алдымен танысып алайық 😊\n"
-            "Атыңыз кім?",
-            reply_markup=ReplyKeyboardRemove(),
-        )
-
-    elif text == "❌ Жоқ":
-        await state.clear()
-        await message.answer(
-            "Жақсы, шешіміңіз өзгерсе, қайта жазыңыз 🌷\n\n"
-            "Қайта бастау үшін /start жазыңыз.",
-            reply_markup=ReplyKeyboardRemove(),
-        )
-
-    else:
-        await message.answer(
-            "Төмендегі батырмалардың бірін таңдаңыз 👇",
-            reply_markup=interest_kb,
-        )
+# 🚀 БАСТАУ БАТЫРМАСЫ
+async def start_flow(message: Message, state: FSMContext):
+    await message.answer("1️⃣ Сіздің атыңыз?")
+    await state.set_state(Form.name)
 
 
-async def name_handler(message: Message, state: FSMContext):
-    name = message.text.strip()
-
-    await state.update_data(name=name, score=0)
-    await state.set_state(BotState.q1)
-
-    await message.answer(
-        f"{name}, қуаныштымын 🤝\n\n"
-        "Енді 3 қысқа сұраққа жауап беріңіз.\n\n"
-        "1-сұрақ:\n"
-        "Сізге қосымша табыс керек пе?",
-        reply_markup=q1_kb,
-    )
+# 1️⃣ АТЫ
+async def q1(message: Message, state: FSMContext):
+    await state.update_data(name=message.text)
+    await message.answer("2️⃣ Жасыңыз қанша?")
+    await state.set_state(Form.age)
 
 
-async def q1_handler(message: Message, state: FSMContext):
-    text = message.text.strip()
-    data = await state.get_data()
-    score = data.get("score", 0)
-
-    if text == "A) Иә":
-        score += 1
-    elif text == "B) Жоқ":
-        pass
-    else:
-        await message.answer("Төмендегі жауаптардың бірін таңдаңыз 👇", reply_markup=q1_kb)
-        return
-
-    await state.update_data(score=score)
-    await state.set_state(BotState.q2)
-
-    await message.answer(
-        "2-сұрақ:\n"
-        "Күніне бизнеске уақыт бөле аласыз ба?",
-        reply_markup=q2_kb,
-    )
+# 2️⃣ ЖАСЫ
+async def q2(message: Message, state: FSMContext):
+    await state.update_data(age=message.text)
+    await message.answer("3️⃣ Мақсатыңыз қандай?")
+    await state.set_state(Form.goal)
 
 
-async def q2_handler(message: Message, state: FSMContext):
-    text = message.text.strip()
-    data = await state.get_data()
-    score = data.get("score", 0)
-
-    if text == "A) 1-2 сағат":
-        score += 1
-    elif text == "B) Уақытым аз":
-        pass
-    else:
-        await message.answer("Төмендегі жауаптардың бірін таңдаңыз 👇", reply_markup=q2_kb)
-        return
-
-    await state.update_data(score=score)
-    await state.set_state(BotState.q3)
-
-    await message.answer(
-        "3-сұрақ:\n"
-        "Жаңа бағыт үйренуге қалай қарайсыз?",
-        reply_markup=q3_kb,
-    )
-
-
-async def q3_handler(message: Message, state: FSMContext):
-    text = message.text.strip()
+# 3️⃣ МАҚСАТ + ФИНАЛ
+async def q3(message: Message, state: FSMContext):
     data = await state.get_data()
 
-    name = data.get("name", "Белгісіз")
-    score = data.get("score", 0)
+    name = data["name"]
+    age = data["age"]
+    goal = message.text
 
-    if text == "A) Қызық":
-        score += 1
-    elif text == "B) Сенімсізбін":
-        pass
-    else:
-        await message.answer("Төмендегі жауаптардың бірін таңдаңыз 👇", reply_markup=q3_kb)
-        return
+    # 🔥 АДМИНГЕ ЖІБЕРУ
+    await message.bot.send_message(
+        ADMIN_ID,
+        f"🔥 Жаңа лид:\n\n"
+        f"👤 Аты: {name}\n"
+        f"🎂 Жасы: {age}\n"
+        f"🎯 Мақсаты: {goal}"
+    )
 
-    if score >= 2:
-        result = (
-            "🔥 СІЗДІҢ НӘТИЖЕ:\n\n"
-            "Сізге онлайн табыс бағыты өте жақсы сәйкес келеді.\n\n"
-            "Сізде қызығушылық бар және бастап көруге потенциал жоғары 💸\n\n"
-            "Мен сізге нақты қалай бастау керегін жеке түсіндіріп бере аламын 👇"
-        )
-    else:
-        result = (
-            "📊 СІЗДІҢ НӘТИЖЕ:\n\n"
-            "Сізге әзірге көбірек ақпарат пен түсіну керек сияқты.\n\n"
-            "Дұрыс бағыт таңдасаңыз, жеңіл бастауға болады 👇"
-        )
-
-    await message.answer(result, reply_markup=ReplyKeyboardRemove())
-
+    # 👤 КЛИЕНТКЕ ЖАУАП
     await message.answer(
-        "👇 Толық ақпарат алу үшін WhatsApp-қа жазыңыз:\n"
-        "https://wa.me/77052304629\n\n"
-        "Мен сізге тегін түсіндіріп берем 💬"
-     )
-
-    user = message.from_user.username if message.from_user.username else "username жоқ"
-
-    if ADMIN_ID:
-        await message.bot.send_message(
-            ADMIN_ID,
-            "🔥 Жаңа лид!\n\n"
-            f"Аты: {name}\n"
-            f"Username: @{user}\n"
-            f"Score: {score}/3"
-        )
+        "🔥 Рахмет! Біз сізбен байланысамыз.\n\n"
+        "📲 Қазір WhatsApp-қа жазыңыз:",
+        reply_markup=whatsapp_button
+    )
 
     await state.clear()
 
 
+# 📞 БАЙЛАНЫС
+async def contact_handler(message: Message):
+    await message.answer(
+        "📲 Бізге жазыңыз:",
+        reply_markup=whatsapp_button
+    )
+
+
+# 🔧 MAIN
 async def main():
     if not TOKEN:
         raise ValueError("BOT_TOKEN енгізілмеген")
@@ -217,12 +111,14 @@ async def main():
     bot = Bot(TOKEN)
     dp = Dispatcher()
 
-    dp.message.register(start_handler, CommandStart())
-    dp.message.register(interest_handler, StateFilter(BotState.waiting_interest))
-    dp.message.register(name_handler, StateFilter(BotState.waiting_name))
-    dp.message.register(q1_handler, StateFilter(BotState.q1))
-    dp.message.register(q2_handler, StateFilter(BotState.q2))
-    dp.message.register(q3_handler, StateFilter(BotState.q3))
+    # РЕГИСТРАЦИЯ
+    dp.message.register(start_handler, Command("start"))
+    dp.message.register(start_flow, F.text == "🚀 Бастау")
+    dp.message.register(contact_handler, F.text == "📞 Байланыс")
+
+    dp.message.register(q1, Form.name)
+    dp.message.register(q2, Form.age)
+    dp.message.register(q3, Form.goal)
 
     await dp.start_polling(bot)
 
