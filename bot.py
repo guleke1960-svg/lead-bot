@@ -18,7 +18,7 @@ from aiogram.types import (
 TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
 
-WHATSAPP_LINK = "https://wa.me/77052304629"  # осы жерге өз WhatsApp номеріңді жаз
+CHANNEL_LINK = "https://t.me/https://t.me/+RaKdcx4_MKM5MGZi"  # осы жерге өз WhatsApp номеріңді жаз
 
 
 menu_kb = ReplyKeyboardMarkup(
@@ -58,9 +58,9 @@ goal_kb = ReplyKeyboardMarkup(
     resize_keyboard=True,
 )
 
-whatsapp_button = InlineKeyboardMarkup(
+channel_button = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="📲 WhatsApp-қа жазу", url=WHATSAPP_LINK)]
+        [InlineKeyboardButton(text="📢 Каналға өту", url=CHANNEL_LINK)]
     ]
 )
 
@@ -179,13 +179,12 @@ async def goal_handler(message: Message, state: FSMContext):
 
     await message.answer(
         "🔥 Сізге толық ақпарат дайын!\n\n"
-        "⚡ Толық түсіндірме мен мысалдарды WhatsApp арқылы жібереміз.\n\n"
-        "👇 WhatsApp арқылы жазыңыз 👇",
-        reply_markup=ReplyKeyboardRemove(),
+        "📢 Компания туралы толық ақпаратты төмендегі каналдан көре аласыз 👇",
+        reply_markup=channel_button,
     )
 
     await message.answer(
-        "📲 WhatsApp-қа өту үшін батырманы басыңыз:",
+        "📲 Каналға өту үшін батырманы басыңыз:",
         reply_markup=whatsapp_button,
     )
 
@@ -196,7 +195,7 @@ async def contact_handler(message: Message):
     await message.answer(
         "⏳ Соңғы 24 сағатта бізге 17 адам жазды\n"
         "Сондықтан кешіктірмеңіз 👇\n\n"
-        "📲 WhatsApp арқылы жазыңыз 👇",
+        "📲 Каналға өтіңіэ 👇",
         reply_markup=whatsapp_button,
     )
 
