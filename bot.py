@@ -177,16 +177,15 @@ async def goal_handler(message: Message, state: FSMContext):
 
     await message.answer(
         "🔥 Сізге толық ақпарат дайын!\n\n"
-        "⚡ Бірақ оны тек WhatsApp-та жібереміз\n"
-        "Себебі ол жерде толық түсіндірме + мысалдар бар\n\n"
-        "👇 Қазір өтіңіз:",
-        reply_markup=whatsapp_button,
+        "⚡ Толық түсіндірме мен мысалдарды WhatsApp арқылы жібереміз.\n\n"
+        "👇 WhatsApp арқылы жазыңыз 👇",
+        reply_markup=ReplyKeyboardRemove(),
     )
 
-    await message.answer(
-        "📲 WhatsApp-қа өту үшін батырманы басыңыз:",
-        reply_markup=whatsapp_button,
-    )
+await message.answer(
+    "📲 WhatsApp-қа өту үшін батырманы басыңыз:",
+    reply_markup=whatsapp_button,
+)
 
     await state.clear()
 
