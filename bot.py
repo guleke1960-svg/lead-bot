@@ -159,7 +159,7 @@ async def goal_handler(message: Message, state: FSMContext):
     ]
 
     if goal not in allowed_goals:
-    await message.answer("Төмендегі дайын жауаптардың бірін таңдаңыз 👇", reply_markup=goal_kb)
+        await message.answer("Төмендегі дайын жауаптардың бірін таңдаңыз 👇", reply_markup=goal_kb)
         return
 
     data = await state.get_data()
@@ -168,7 +168,7 @@ async def goal_handler(message: Message, state: FSMContext):
     username = message.from_user.username if message.from_user.username else "username жоқ"
 
     if ADMIN_ID:
-    await message.bot.send_message(
+         await message.bot.send_message(
          ADMIN_ID,
          "🔥 Жаңа лид!\n\n"
          f"👤 Аты: {name}\n"
