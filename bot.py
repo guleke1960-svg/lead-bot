@@ -25,7 +25,6 @@ ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
 CHANNEL_LINK = "https://t.me/+RaKdcx4_MKM5MGZi"  # осы жерге өз WhatsApp номеріңді жаз
 SHEET_NAME = os.getenv("SHEET_NAME", "Лидтер")
 
-SHEET_NAME = os.getenv("SHEET_NAME", "Лидтер")
 
 def save_lead_to_sheet(name, age, goal, username):
     creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
@@ -205,7 +204,10 @@ async def goal_handler(message: Message, state: FSMContext):
             f"📲 Telegram: @{username}",
         )
 
-    save_lead_to_sheet(name, age, goal, username)
+    await asyncio.to_thread(
+        save_lead_to_sheet,
+        name, age, goal, username
+    )
 
     await message.answer(
         "🔥 Сізге толық ақпарат дайын!\n\n"
