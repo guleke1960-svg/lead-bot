@@ -18,7 +18,7 @@ from aiogram.types import (
 TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
 
-CHANNEL_LINK = "https://t.me/https://t.me/+RaKdcx4_MKM5MGZi"  # осы жерге өз WhatsApp номеріңді жаз
+CHANNEL_LINK = "https://t.me/+RaKdcx4_MKM5MGZi"  # осы жерге өз WhatsApp номеріңді жаз
 
 
 menu_kb = ReplyKeyboardMarkup(
