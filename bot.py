@@ -1,6 +1,10 @@
 import asyncio
 import logging
 import os
+import json
+from datetime import datetime
+import gspread
+from google.oauth2.service_account import Credentials
 
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
@@ -19,7 +23,31 @@ TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
 
 CHANNEL_LINK = "https://t.me/+RaKdcx4_MKM5MGZi"  # осы жерге өз WhatsApp номеріңді жаз
+SHEET_NAME = os.getenv("SHEET_NAME", "Лидтер")
 
+SHEET_NAME = os.getenv("SHEET_NAME", "Лидтер")
+
+def save_lead_to_sheet(name, age, goal, username):
+    creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
+    creds_dict = json.loads(creds_json)
+
+    scopes = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive",
+    ]
+
+    creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+    client = gspread.authorize(creds)
+
+    sheet = client.open(SHEET_NAME).sheet1
+
+    sheet.append_row([
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        name,
+        age,
+        goal,
+        username,
+    ])
 
 menu_kb = ReplyKeyboardMarkup(
     keyboard=[
@@ -168,14 +196,16 @@ async def goal_handler(message: Message, state: FSMContext):
     username = message.from_user.username if message.from_user.username else "username жоқ"
 
     if ADMIN_ID:
-         await message.bot.send_message(
-         ADMIN_ID,
-         "🔥 Жаңа лид!\n\n"
-         f"👤 Аты: {name}\n"
-         f"🎂 Жасы: {age}\n"
-         f"🎯 Мақсаты: {goal}\n"
-         f"📲 Telegram: @{username}",
-     )
+        await message.bot.send_message(
+            ADMIN_ID,
+            "🔥 Жаңа лид!\n\n"
+            f"👤 Аты: {name}\n"
+            f"🎂 Жасы: {age}\n"
+            f"🎯 Мақсаты: {goal}\n"
+            f"📲 Telegram: @{username}",
+        )
+
+    save_lead_to_sheet(name, age, goal, username)
 
     await message.answer(
         "🔥 Сізге толық ақпарат дайын!\n\n"
