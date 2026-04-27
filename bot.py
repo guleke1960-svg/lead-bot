@@ -183,10 +183,7 @@ async def goal_handler(message: Message, state: FSMContext):
         reply_markup=channel_button,
     )
 
-    await message.answer(
-        "📢 Компания туралы толық ақпаратты төмендегі каналдан көре аласыз 👇",
-        reply_markup=channel_button,
-    )
+   
 
     await state.clear()
 
