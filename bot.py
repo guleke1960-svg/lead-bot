@@ -38,7 +38,9 @@ def save_lead_to_sheet(name, age, goal, username):
     creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
     client = gspread.authorize(creds)
 
-    sheet = client.open(SHEET_NAME).sheet1
+    sheet = client.open_by_url(
+        "https://docs.google.com/spreadsheets/d/1fQ1ORTbZUWu1feJ2bW19OzcI3CWeCb5vxPCayun5A-M/edit?hl=ru&gid=0#gid=0"
+    ).sheet1
 
     sheet.append_row([
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
