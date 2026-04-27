@@ -47,7 +47,7 @@ def save_lead_to_sheet(name, age, goal, username):
         name,
         age,
         goal,
-        username,
+        username
     ])
 
 menu_kb = ReplyKeyboardMarkup(
